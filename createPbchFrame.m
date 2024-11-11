@@ -9,9 +9,9 @@ function resourceGrid = createPbchFrame(caseLetter, absolutePointA, channelBandw
                 MIB (1,24) % 24 bit sequence
                 SFN (1,1) % system frame number
                 symbolOffset (1,1) % time-domain offset in symbols
-                NCRBSSB(1,1) % frequency-domain offset from PointA in resource blocks
-                kSSB (1,1) % frequency-domain offset from PointA in subcarriers (0...23)
-                powerFactor (1,4) = [1 1 1 1] % power allocation scaling factor [pssVal ssVal pbchVal dmrsVal]
+                NCRBSSB(1,1) % frequency-domain offset from PointA in units of resource blocks assuming 15 kHz SCS
+                kSSB (1,1) % frequency-domain offset from PointA in subcarriers assuming 15 kHz SCS (0...23)
+                powerFactor (1,4) = [1 1 1 1] % power allocation scaling factor [<pss> <ss> <pbch> <dmrs>]
             end
             
             % Get resource grid configuration
@@ -50,7 +50,7 @@ function resourceGrid = createPbchFrame(caseLetter, absolutePointA, channelBandw
             end
             
             % mapping onto resource grid
-            subcarrierOffset = 12*NCRBSSB+kSSB;
+            subcarrierOffset = (12*NCRBSSB+kSSB)*2^(-config.mu);
             rg.mapToResourceGrid(ssPbchBurst, symbolOffset, subcarrierOffset);
             resourceGrid = rg.resourceGrid;
 end
