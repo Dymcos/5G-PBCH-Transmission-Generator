@@ -12,7 +12,7 @@ function out_seq = scrambling(in_seq, NCellId, Lmax_)
     s = zeros(1,A);
     M = A-3 - (Lmax_ == 10) - 2*(Lmax_ == 20) - 3*(Lmax_ == 64);
     nu = [in_seq(1+6) in_seq(1+24)]; % 3rd & 2nd LSB of SFN are stored in 
-    nu = bin2dec(num2str(nu));       % bits 6 & 24 of interleaved sequence
+    nu = bit2int(nu.',2);       % bits 6 & 24 of interleaved sequence
 
     %determination of c
     c = pseudoRandomSequence(NCellId,160);

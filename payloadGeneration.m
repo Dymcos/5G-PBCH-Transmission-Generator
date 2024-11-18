@@ -10,15 +10,15 @@ function out_sequence = payloadGeneration(MIB,SFN,HRF, SSBParam, Lmax_)
     
     % processing SSB bits
     if Lmax_ == 64 % [<6th bit> <5th bit> <4th bit>] of iSSB
-        biSSB = decimalToBinaryVector(SSBParam,6);
+        biSSB = int2bit(SSBParam,6).';
         kSSBbits = [biSSB(1) biSSB(2) biSSB(3)];
     else % [<MSB of kSSB> 0 0] if Lmax_ =4|8 
-        bkSSB=decimalToBinaryVector(SSBParam,5);
+        bkSSB=int2bit(SSBParam,5).';
         kSSBbits = [bkSSB(1) 0 0]; 
     end
     
     % sequence generation
-    binSFN = decimalToBinaryVector(SFN,10);
+    binSFN = int2bit(SFN,10).';
     sequence = [MIB binSFN((end-3):end) HRF kSSBbits];
 
     % interleaving
