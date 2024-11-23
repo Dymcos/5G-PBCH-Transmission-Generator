@@ -27,7 +27,7 @@ function resourceGrid = createPbchFrame(caseLetter, absolutePointA, channelBandw
             c = pseudoRandomSequence(NCellId,M*config.Lmax_); % sequence for PBCH scrambling
             
             for HRF=0:1 % for each half radio frame
-                iSSB = 0;
+                iSSB = 0; % = 0...Lmax_-1
                 HRFSymbolShift = HRF*2^config.mu*7*10;
                 for shift = (config.blockIndexes+HRFSymbolShift) % for each block in one HRF
                     
@@ -40,7 +40,8 @@ function resourceGrid = createPbchFrame(caseLetter, absolutePointA, channelBandw
                     pbch = qpskModulation(pbch);
                     
                     % Dm-Rs Generation
-                    dmrs = generatePbchDmRs(iSSB,NCellId);
+                    iSSB_ = iSSB + 4*HRF*(config.Lmax_ == 4);
+                    dmrs = generatePbchDmRs(iSSB_,NCellId);
                     
                     % block creation
                     ssPbchBurst(1:240,(1:4)+shift) = createSsPbchBlock(ss,pbch,dmrs,NCellId,powerFactor);
