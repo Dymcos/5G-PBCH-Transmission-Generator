@@ -6,7 +6,7 @@ function resourceGrid = createPbchFrame(caseLetter, absolutePointA, channelBandw
                 absolutePointA (1,1)  % absolute frequency Point A in GHZ
                 channelBandwidth (1,1) % channel bandwidth in MHz
                 NCellId (1,1) % cell identity number (0...1007)
-                MIB (1,24) % 24 bit sequence
+                MIB (1,23) % 23 bit sequence
                 SFN (1,1) % system frame number
                 symbolOffset (1,1) % time-domain offset in symbols
                 NCRBSSB(1,1) % frequency-domain offset from PointA in units of resource blocks assuming 15 kHz SCS

@@ -1,7 +1,7 @@
 function out_sequence = payloadGeneration(MIB,SFN,HRF, SSBParam, Lmax_)
 %payloadGeneration [TS 38.212, 7.1.1]
     arguments
-    MIB (1,24)
+    MIB (1,23)
     SFN (1,1) % system frame number positive integer 
     HRF (1,1) % half frame bit
     SSBParam (1,1) % kSSB if Lmax_ =4|8 or iSSB if Lmax_ = 64
@@ -19,7 +19,7 @@ function out_sequence = payloadGeneration(MIB,SFN,HRF, SSBParam, Lmax_)
     
     % sequence generation
     binSFN = int2bit(SFN,10).';
-    sequence = [MIB binSFN((end-3):end) HRF kSSBbits];
+    sequence = [0 MIB binSFN((end-3):end) HRF kSSBbits];
 
     % interleaving
     A = length(sequence);
