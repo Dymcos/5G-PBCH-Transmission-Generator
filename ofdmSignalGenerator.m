@@ -49,7 +49,6 @@ end
     signal = zeros(1, Ntotal);
 
     x = ifft([resourceGrid(:, symbolIndex +1); zeros(2 ^ (17 - config.mu) - NGridSize * NscRB, symbolsAmount)]);
-    figure
     for symbolIndex = symbolIndex
         
         l = mod(symbolIndex, config.symbolsPerSubframe);
