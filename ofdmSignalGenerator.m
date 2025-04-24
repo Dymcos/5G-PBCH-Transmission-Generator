@@ -59,11 +59,10 @@ end
         % creating signal
         signal(t(end - Nu + 1 : end) +1) = (exp(1j * 2*pi * (k0 - NGridSize * NscRB / 2)) * ...
             2 ^ (17 - config.mu) * x((0 : Nu-1) +1,symbolIndex +1)).';
-        plot(real(signal))
+        
         % creating cyclic prefixes
         signal(t((0 : Ncp(l +1)-1) +1 ) +1) = signal(t(end - (Ncp(l +1) - 1) : end) +1);
         
-        %pause(1)
     end
     waveform = resample(signal, fs, 1/Tc);
 end
