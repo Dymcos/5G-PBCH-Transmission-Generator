@@ -5,7 +5,7 @@ clc; clear all; close all;
 config = caseConfiguration("C",4,1,0);
 
 channelBandwidth = 50;
-SFN = 0;
+SFN = 6;
 MIB = defineMib(SFN ,0,0 , 0,[0 1 0 1 1 0 0 1] ,0 ,0);
 NCRBSSB = 10; % number of common resource block containing first subcarrier of SS/PBCH block expressed in units assuming 15 kHz SCS (= offsetToPointA)
 kSSB = 20; % offset to subcarrier 0 in NCRBSSB resource block expressed in subcarriers assuming 15 kHz SCS
@@ -28,7 +28,8 @@ ylabel  ("Subcarriers");
 
 %% Signal generator
 
-waveform = ofdmSignalGenerator(fs,rg(:,1:280),channelBandwidth,NGridStart,config,0);
+%waveform = ofdmSignalGenerator(fs,rg(:,1:280),channelBandwidth,NGridStart,config,0);
+waveform = generatePbchSignal(fs,50e-3,mod(SFN,16),1,'B',NCRBSSB,floor(mod(kSSB,16)/8),4,channelBandwidth,NCellId,MIB,0);
 
 %% Signal painting
 figure Name OFDM
@@ -43,3 +44,4 @@ xValsUnits = 1e-3; % for ms
 xticklabels(num2str([ceil((tickVals/fs / xValsUnits / xValsPrecision).') * xValsPrecision]))
 xlabel('t, ms')
 ylabel('Re[s(t)]');
+disp('DONE');
