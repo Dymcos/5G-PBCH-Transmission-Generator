@@ -18,17 +18,18 @@ function resourceGrid = createPbchHalfFrame(caseLetter, absolutePointA, channelB
             config = caseConfiguration(caseLetter,absolutePointA);
 
             % Create resource grid
-            rg=ResourceGrid(channelBandwidth,config.mu);
+            symbolsInHalfFrame = 2^config.mu * 14 * 5;
+            symbolsAmount = symbolsInHalfFrame;
+            rg=ResourceGrid(symbolsAmount, channelBandwidth, config.mu);
 
             % Create SS/PBCH burst
             ss = SsSignals(NCellId);
-            ssPbchBurst = zeros(240,2^config.mu*14*10);
+            ssPbchBurst = zeros(240, symbolsAmount);
             M = 864; % length of generated PBCH bit sequence
             c = pseudoRandomSequence(NCellId,M*config.Lmax_); % sequence for PBCH scrambling
 
             iSSB = 0; % = 0...Lmax_-1
-            HRFSymbolShift = HRF*2^config.mu*7*10;
-            for shift = (config.blockIndexes+HRFSymbolShift) % for each block in one HRF
+            for shift = (config.blockIndexes) % for each block in one HRF
 
                 % PBCH generation [38.212, 7.1]
                 ssPbchParam = kSSB*(config.Lmax_~=64)+iSSB*(config.Lmax_==64); % selecting kSSB or iSSB

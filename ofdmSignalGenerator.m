@@ -21,7 +21,7 @@ end
     NGridSize = ceil(length(resourceGrid(:, 1)) / NscRB);
     symbolsAmount = length(resourceGrid(1, :));
 
-    mu0 = 2; % the largest mu value among SCS configurations in FR1 for downlink
+    mu0 = 1; % the largest mu value among SCS configurations in FR1 for downlink
     NGridStart0 = NGridStart * 2 ^ (config.mu - mu0);
     ResourceGridConstants;
     NGridSize0Seq = MaximumTransmissionBandwidthConfiguration(2 ^ mu0 * 15); % 2^mu*15 = SCS
@@ -47,8 +47,9 @@ end
 
     Ntotal = sum(Nsymb);
     signal = zeros(1, Ntotal);
-
-    x = ifft([resourceGrid(:, symbolIndex +1); zeros(2 ^ (17 - config.mu) - NGridSize * NscRB, symbolsAmount)]);
+    
+    Nfft = 2 ^ (17 - config.mu);
+    x = ifft([resourceGrid(:, symbolIndex +1); zeros(Nfft - NGridSize * NscRB, symbolsAmount)]);
     for symbolIndex = symbolIndex
         
         l = mod(symbolIndex, config.symbolsPerSubframe);
@@ -56,8 +57,10 @@ end
         t = (0 : Nsymb(l +1)-1)+ Nstart(l +1) + sum(Nsymb)*subframeIndex; % absolute time index
 
         % creating signal
-        signal(t(end - Nu + 1 : end) +1) = (exp(1j * 2*pi * (k0 - NGridSize * NscRB / 2)) * ...
-            2 ^ (17 - config.mu) * x((0 : Nu-1) +1,symbolIndex +1)).';
+        timeFactor = Nfft^-1 * (0 : Nu-1);
+        signal(t(end - Nu + 1 : end) +1) = exp(1j * 2*pi * (k0 - NGridSize * NscRB / 2) * timeFactor ) .* ...
+            Nfft .* x((0 : Nu-1) +1,symbolIndex +1).';
+        signal = signal.';
         
         % creating cyclic prefixes
         signal(t((0 : Ncp(l +1)-1) +1 ) +1) = signal(t(end - (Ncp(l +1) - 1) : end) +1);

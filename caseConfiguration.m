@@ -1,11 +1,11 @@
-function out = caseConfiguration(caseLetter, carrierFrequency, isSpectrumOperationPaired, isSpectrumAccessShared) 
+function out = caseConfiguration(caseLetter, carrierFrequency, isSpectrumOperationPaired, isSpectrumAccessShared)
 % defines resource grid configuration via case identificator letter
 % in cases without cyclic prefix
     arguments
-        caseLetter char % freq. config case letter, see [38.213, 4.1]
+        caseLetter % freq. config case letter, see [38.213, 4.1]
         carrierFrequency (1,1) % carrier frequency in GHz
-        isSpectrumOperationPaired logical = 0; % defines paired spectrum operation cases
-        isSpectrumAccessShared logical = 0; % defines shared spectrum channel acces cases
+        isSpectrumOperationPaired = 0; % defines paired spectrum operation cases
+        isSpectrumAccessShared = 0; % defines shared spectrum channel acces cases
     end
     switch caseLetter
         case 'A'

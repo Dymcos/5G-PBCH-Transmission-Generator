@@ -16,10 +16,10 @@ function MIB = defineMib(...
     cellBarred (1,1){mustBeMember(cellBarred,[0,1])} % bit
     intraFrequencyReselection (1,1){mustBeMember(intraFrequencyReselection,[0,1])} % bit
     end
-    
+
     bSFN = int2bit(SFN,10).';
-    bkSSB=int2bit(kSSB,5).';    
-    
+    bkSSB= int2bit(kSSB,5).';
+
     MIB = [bSFN(1:6) subCarrierSpacingCommon bkSSB(end-3:end) dmrsTypeAPos SIB1 cellBarred intraFrequencyReselection 0];
 
 end
