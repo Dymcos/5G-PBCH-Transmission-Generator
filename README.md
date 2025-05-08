@@ -1,1 +1,1 @@
-Start from pbchSignalGenerator.m function or example.m script.
+Open test_compare_with_matlab.m script.
