@@ -12,8 +12,9 @@ kSSB = 20; % offset to subcarrier 0 in NCRBSSB resource block expressed in subca
 NCellId = 250;
 startHRF = 0;
 fs = 50e6;
+duration = 8e-3;
 
-%% Create frame
+%% Create halfframe (only for demonstration)
 rg = createPbchHalfFrame('C', 4, channelBandwidth, NCellId, MIB, startSFN, startHRF, NCRBSSB, kSSB,[1 0.9 0.8 0.7]);
 
 %% Resource grid painting
@@ -25,7 +26,7 @@ ylabel  ("Subcarriers");
 
 %% Signal generator
 
-waveform = pbchSignalGenerator(fs,8e-3,mod(startSFN,16),0,'C',NCRBSSB,floor(mod(kSSB,16)/8),4,channelBandwidth,NCellId,MIB);
+waveform = pbchSignalGenerator(fs,duration,mod(startSFN,16),0,'C',NCRBSSB,floor(mod(kSSB,16)/8),4,channelBandwidth,NCellId,MIB);
 
 %% Signal painting
 figure Name OFDM

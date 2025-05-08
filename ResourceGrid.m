@@ -20,17 +20,21 @@ classdef ResourceGrid<handle
             ResourceGridConstants;
             NRBSeq=MaximumTransmissionBandwidthConfiguration(2^mu*15); % 2^mu*15 = SCS
             NRB=NRBSeq(channelBandwidth);
+            if NRB == 0
+                error("Incorrect channel bandwidth value.")
+            end
             obj.resourceGrid=zeros(12*NRB, symbolsAmount);
         end
         function mapToResourceGrid(obj, dataMatrix, symbOfs, scOfs)
             arguments
                 obj
                 dataMatrix % input data matrix
-                symbOfs (1,1)  = 0 % time domain offset expressed in number of OFDM symbols
-                scOfs (1,1) = 0 % frequency domain offset expressed in number of subcarriers
+                symbOfs (1,1) {mustBeInteger, mustBeNonnegative} = 0 % time domain offset expressed in number of OFDM symbols
+                scOfs (1,1) {mustBeInteger, mustBeNonnegative} = 0 % frequency domain offset expressed in number of subcarriers
             end
-            scOfs = ceil(scOfs);
-            obj.resourceGrid(scOfs+(1:length(dataMatrix(:,1))),symbOfs+(1:length(dataMatrix(1,:))))=dataMatrix;
+            symb = 0:length(dataMatrix(1,:))-1;
+            sc = 0:length(dataMatrix(:,1))-1;
+            obj.resourceGrid(scOfs + sc +1, symbOfs + symb +1) = dataMatrix;
         end
     end
 end

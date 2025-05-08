@@ -11,7 +11,7 @@ function waveform = pbchSignalGenerator(...
         startHRF (1,1) {mustBeMember(startHRF, [0 1])} % start half frame bit
         caseLetter (1,1) {mustBeMember(caseLetter,{'A','B','C'})} % frequency config case letter
         NCRBSSB (1,1) % number of common resource block containing first subcarrier of SS/PBCH block expressed in units assuming 15 kHz SCS (offsetToPointA)
-        kSSBbit (1,1) % 4th least significant bit of kSSB needed for Lmax_ = 4 or 8
+        kSSBbit (1,1) % 5th least significant bit of kSSB needed for Lmax_ = 4 or 8
         absolutePointA (1,1) % ARFCN (absolute radio frequency channel number) frequency in GHz
         channelBandwidth (1,1) % channel bandwidth in MHz
         NCellId (1,1) {mustBeMember(NCellId, 0:1007)} % cell identificator (0...1007)
@@ -22,22 +22,22 @@ function waveform = pbchSignalGenerator(...
     
     startFrame = startFrame + bit2int([MIB(1:6) 0 0 0 0].',10);
     config = caseConfiguration(caseLetter, absolutePointA);
-    kSSB = bit2int([MIB(8:10)].',3);
+    kSSB = bit2int([MIB(8:11)].',4);
     if ismember(config.Lmax_, [4 8])
-        kSSB = kSSB + bit2int([kSSBbit 0 0 0].', 4);
+        kSSB = kSSB + kSSBbit * 2^4;
     end
-    
+
     HRF_DURATION = 5e-3;
     HRFsAmount = ceil(duration / HRF_DURATION);
     wavetable = zeros(floor(HRF_DURATION * fs), HRFsAmount);
     for absoluteHRFindex = 0:HRFsAmount-1
         HRF = mod(absoluteHRFindex + startHRF,2);
         SFN = startFrame + floor((absoluteHRFindex + startHRF) / 2);
-        rg = createPbchHalfFrame(caseLetter, absolutePointA, channelBandwidth, NCellId, MIB, SFN, HRF, NCRBSSB, kSSB,powerFactor);
-        wavetable(:, absoluteHRFindex +1) = ofdmSignalGenerator(fs, rg, channelBandwidth, 0, config, isCpExtended).';
+        [rg, rgShift] = createPbchHalfFrame(caseLetter, absolutePointA, channelBandwidth, NCellId, MIB, SFN, HRF, NCRBSSB, kSSB,powerFactor);
+        wavetable(:, absoluteHRFindex +1) = ofdmSignalGenerator(fs, rg, channelBandwidth, 0, config, isCpExtended, rgShift).';
     end
     
     buffer = reshape(wavetable,[1 length(wavetable(:,1))*length(wavetable(1,:))]);
-    waveform = buffer(1:floor(duration * fs)); % deleting unndeded samples
+    waveform = buffer(1:floor(duration * fs)); % deleting not requested samples
 end
 

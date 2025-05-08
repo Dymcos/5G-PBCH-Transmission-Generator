@@ -66,7 +66,7 @@ function out = caseConfiguration(caseLetter, carrierFrequency, isSpectrumOperati
             out.mu = 6;
             out.Lmax_ = 64;
         otherwise
-            throw(MException("Freq. Case Error","Case must be uppercase letter A...G"));
+            error("Freq case must be uppercase letter A, B, C, D, E, F or G!")
     end
     out.blockIndexes=sort(out.blockIndexes); % indexing from 1
     out.scs = 2^out.mu * 15;

@@ -1,4 +1,4 @@
-function resourceGrid = createPbchHalfFrame(caseLetter, absolutePointA, channelBandwidth, NCellId, MIB, SFN, HRF, NCRBSSB, kSSB, powerFactor)
+function [resourceGrid, resGridShift] = createPbchHalfFrame(caseLetter, absolutePointA, channelBandwidth, NCellId, MIB, SFN, HRF, NCRBSSB, kSSB, powerFactor)
 % creates one halfframe transmission of Physical Broadcast Channel (PBCH)
 
             arguments
@@ -50,7 +50,9 @@ function resourceGrid = createPbchHalfFrame(caseLetter, absolutePointA, channelB
             end
 
             % mapping onto resource grid
-            subcarrierOffset = (12*NCRBSSB+kSSB)*2^(-config.mu);
-            rg.mapToResourceGrid(ssPbchBurst, 0, subcarrierOffset);
+            shift = 24 * (caseLetter == 'A'); % needed for bad solution of kSSB problem in case 'A'
+            subcarrierOffset = (12 * NCRBSSB + kSSB - shift) * 2^(-config.mu);
+            resGridShift = subcarrierOffset - floor(subcarrierOffset);
+            rg.mapToResourceGrid(ssPbchBurst, 0, floor(subcarrierOffset));
             resourceGrid = rg.resourceGrid;
 end
